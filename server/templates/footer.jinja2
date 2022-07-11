@@ -1,0 +1,16 @@
+{% if request.url_rule.endpoint != "index_page" %}
+<a href="{{ url_for('index_page')}}"> Return to Homepage </a>
+{% endif %}
+
+<p style="width:600px"> While this is not meant to be more than a toy providing very rough estimates and is 
+not statistically rigourous, it still should give a you the idea of the fact that <a href="{{ url_for('everywhere')}}">everywhere</a> is 
+warming very quickly just using raw temperture data from <a href="ftp://ftp.ncdc.noaa.gov/pub/data/ghcn/daily">NOAA</a>. 
+
+<p> Resources/Links </p>
+<ul>
+    <li><a href="https://github.com/gregoryfdel/global_warming/">Source Code</a></li>
+    <li><a href="https://climate.nasa.gov">NASA Climate</a></li>
+    <li><a href="https://www.climate.gov/">Climate.gov</a></li>
+    <li><a href="https://www.youtube.com/watch?v=6_5PyOreBbo">A good video from the youtuber UpisNotJump</a></li>
+</ul>
+<pre style="font-size:10px">Copyright &#169; 2022 Gregory Foote</pre>

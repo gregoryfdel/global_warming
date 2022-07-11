@@ -1,0 +1,15 @@
+.idea
+.vscode
+.git
+venv
+z_old_code
+**/.idea/**
+**/.vscode/**
+**/venv/**
+**.tar.gz
+**.tar
+**.zip
+make_data/data/**
+make_data/db/**
+make_data/gazetteer_data/**
+make_data/ghcnd_all/**

@@ -1,0 +1,13 @@
+<head>
+    <script src="{{ url_for('static', filename='node_modules/plotly.js-dist-min/plotly.min.js')}}"></script>
+</head>
+<body>
+    <div id="gd"></div>
+
+    <script>
+        Plotly.newPlot("gd", /* JSON object */ {
+            "data": [{ "y": [1, 2, 3] }],
+            "layout": { "width": 600, "height": 400}
+        })
+    </script>
+</body>

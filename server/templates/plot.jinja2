@@ -1,0 +1,156 @@
+{% extends "base.jinja2" %}
+
+{% set is_plotting = True %}
+
+{% block title %}{{place_name}}{% endblock %}
+
+{% block head %}
+<script>
+//https://stackoverflow.com/questions/6195335/linear-regression-in-javascript
+function linearRegression(x, y){
+    var lr = {};
+    var n = y.length;
+    var sum_x = 0;
+    var sum_y = 0;
+    var sum_xy = 0;
+    var sum_xx = 0;
+    var sum_yy = 0;
+
+    for (var i = 0; i < y.length; i++) {
+
+        sum_x += x[i];
+        sum_y += y[i];
+        sum_xy += (x[i]*y[i]);
+        sum_xx += (x[i]*x[i]);
+        sum_yy += (y[i]*y[i]);
+    } 
+
+    lr['slope'] = (n * sum_xy - sum_x * sum_y) / (n*sum_xx - sum_x * sum_x);
+    lr['intercept'] = (sum_y - lr.slope * sum_x)/n;
+    lr['r2'] = Math.pow((n*sum_xy - sum_x*sum_y)/Math.sqrt((n*sum_xx-sum_x*sum_x)*(n*sum_yy-sum_y*sum_y)),2);
+    lr['fit_x'] = x;
+    lr['fit_y'] = x.map(ii=>(ii*lr['slope']) + lr['intercept']);
+    return lr;
+}
+getFL = a => [Math.min(...a), Math.max(...a)];
+function getPlotRange(a){
+    fla = getFL(a);
+    ra = Math.abs(fla[1] - fla[0]);
+    return [fla[0] - (ra*0.1), fla[1] + (ra*0.1)];
+}
+
+function getTestMsg(d_sym, sl, ite, start_year, end_year) {
+    fit_fn = ii => ii*sl + ite;
+    test_warming = fit_fn(end_year) - fit_fn(start_year);
+    return "This area has experienced an estimated average temperture change of " + test_warming.toFixed(3) + "  " + deg_sym + " between " + start_year + " and " + end_year;
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<h2>Yearly Average Temperature Graph for {{inputted}}</h2>
+
+<div id="warming"></div>
+<div id="plot"></div>
+<p><div id="r2text">This fitting has an R&#178; of <span id="r2val">-0</span>. More information can be found on <a href="https://en.wikipedia.org/wiki/Coefficient_of_determination">wikipedia</a></div></p>
+{% if stations != "" %}
+<h4>Map of Stations Used</h4>
+<div id="map"></div>
+{% endif %}
+
+<script>
+    var xs = {{x_pts}};
+    var ys = {{y_pts}};
+    var a_data = linearRegression(xs, ys);
+    document.getElementById("r2val").innerHTML = a_data["r2"].toFixed(3);
+    {% if is_f %}
+    var deg_sym = "&#8457;";
+    {% else %}
+    var deg_sym = "&#8451;";
+    {% endif %}
+
+    {% if stations != "" %}
+    var stations = {{ stations }};
+    var map_labels = [];
+    for (var i = 0; i < stations["ID"].length; i++) {
+        if (stations["ID"][i] != "") {
+            map_labels[i] = "<a href=\"https://www.ncdc.noaa.gov/cdo-web/datasets/GHCND/stations/GHCND:" + stations["ID"][i] + "/detail/\">"+stations["name"][i] + "</a>";
+        } else {
+            map_labels[i] = stations["name"][i];
+        }
+    }
+        Plotly.newPlot("map", {
+        "data": [{
+            type: 'scattergeo',
+            mode: 'markers+text',
+            text: map_labels,
+            lon: stations["long"],
+            lat: stations["lat"],
+            marker: {
+                size: 7,
+                line: {
+                    width: 1
+                }
+            },   
+        }],
+        "layout": {
+            "width": 800,
+            "height": 600,
+            geo: {
+                resolution: 50,
+                lonaxis: {
+                    'range': getPlotRange(stations["long"])
+                },
+                lataxis: {
+                    'range': getPlotRange(stations["lat"])
+                },
+                showrivers: true,
+                rivercolor: '#fff',
+                showlakes: true,
+                lakecolor: '#fff',
+                showland: true,
+                landcolor: '#EAEAAE',
+                showcountries: true,
+                countrycolor: '#d3d3d3',
+                countrywidth: 1.5,
+                showsubunits: true,
+                subunitcolor: '#d3d3d3',
+                subunitwidth: 1.5,
+            }
+        }
+    });
+    {% endif %}
+    
+    Plotly.newPlot("plot", {
+        "data": [{
+            "x": xs,
+            "y": ys,
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Weather Data',
+        },{
+            "x": a_data['fit_x'],
+            "y": a_data['fit_y'],
+            mode: 'lines',
+            type: 'scatter',
+            name: 'Fitted',
+        }],
+        "layout": {
+            "width": 800,
+            "height": 600,
+            xaxis: {
+                title: 'Year',
+                type: 'linear',
+                range: getPlotRange(xs)
+            },
+            yaxis: {
+                title: "Average Temperature " + deg_sym,
+                type: 'linear',
+                range: getPlotRange(ys),
+            }
+        }
+    });
+
+    document.getElementById("warming").innerHTML = getTestMsg(deg_sym, a_data['slope'], a_data['intercept'], 1900, 2022);
+</script>
+{% endblock %}

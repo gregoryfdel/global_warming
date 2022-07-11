@@ -1,0 +1,11 @@
+{
+  "name": "global_warming_static",
+  "version": "1.0.0",
+  "description": "static files associated with the global warming server",
+  "main": "index.js",
+  "author": "Gregory Foote",
+  "license": "MPL-2.0",
+  "dependencies": {
+    "plotly.js-dist-min": "^2.12.1"
+  }
+}

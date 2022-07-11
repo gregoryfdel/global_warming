@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    {% if is_plotting %}
+    <script src="{{ url_for('static', filename='node_modules/plotly.js-dist-min/plotly.min.js')}}"></script>
+    {% endif %}
+    <style>
+    body {
+        font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+        font-size:14px;
+        line-height:1.42857143;
+        color:#333;
+        background-color:#fff
+    }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body>
+{% block content %}{% endblock %}
+
+{% include 'footer.jinja2' %}
+
+</body>
+</html>

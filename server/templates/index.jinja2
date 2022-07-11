@@ -1,0 +1,46 @@
+{% extends "base.jinja2" %}
+
+{% set is_plotting = False %}
+
+{% block title %}Global Warming Estimator{% endblock %}
+
+{% block content %}
+<h2> Global Warming Estimator </h2>
+<p> Using weather data from NOAA, estimate how much warming an area has experienced </p>
+<p> Type a Zip code; City/State; Latitude/Longitude</p>
+<p> All code is availible on github with the MIT license
+including the data scraping/processing here.
+<br/>
+This is something I just worked on to learn data and web stuff, 
+so no guarantee it wont randomly break.</p>
+
+<div>
+<form action="/loc" method="get">
+        <label for="zip">Zip Code</label>
+        <input type="text" placeholder="" name="zip" maxlength="5" id="zip">
+    <p style="font-size:18px"> Or </p>
+        <label for="city">City and State</label><br/>
+        <input type="text" placeholder="" name="city" id="city"> <input type="text" placeholder="" name="state" id="state" maxlength="2">
+    <p style="font-size:18px"> Or </p>
+        <label for="lat">Latitude and Longitude</label><br/>
+        <input type="text" placeholder="" name="lat" id="lat"> <input type="text" placeholder="" name="long" id="long">
+    <br/>
+    <br/>
+    <label for="use_f"> Use Fahrenheit?</label><br>
+    <input type="checkbox" id="use_f" name="use_f" value="use_f">
+    <div>
+        <button type="submit">Search</button>
+    </div>
+</form>
+<p style="font-size:18px"> Or </p>
+<h3> Get average over all data </h3>
+<form action="/everywhere" method="get">
+
+    <label for="use_f"> Use Fahrenheit?</label><br>
+    <input type="checkbox" id="use_f" name="use_f" value="use_f">
+    <div>
+        <button type="submit">Everywhere</button>
+    </div>
+</form>
+<br />
+{% endblock %}
