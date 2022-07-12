@@ -6,6 +6,8 @@ The python script `make_data.py` takes temperature and location data from
 * ftp://ftp.ncdc.noaa.gov/pub/data/ghcn/daily/ghcnd-stations.txt
 * https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2021_Gazetteer/
 and turns it into a usable [duckdb](https://duckdb.org/) database file which contains three tables
+
+
 | Table | Description |
 | :---  | :---        |
 | loc_to_temp | Connects locations to a time series of yearly average temperatures |
